@@ -5,117 +5,128 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>굴뚝 TMS 시료채취 핸드북</title>
 <style>
-  /* ===== 색과 기본 설정 ===== */
+  /* ===== 색 (메모장 느낌) ===== */
   :root{
-    --main:#1f6feb;       /* 포인트 색(파랑) */
-    --main-dark:#1a5fcc;
-    --bg:#f4f6fb;         /* 배경색 */
-    --card:#ffffff;       /* 카드 배경 */
-    --text:#1b1f27;       /* 글자색 */
-    --muted:#5b6473;      /* 연한 글자 */
-    --line:#e3e8f0;       /* 구분선 */
-    --warn-bg:#fff6e5;    /* 주의사항 배경 */
-    --warn-line:#f0b429;  /* 주의사항 테두리 */
+    --paper:#fff9ec;      /* 종이 */
+    --desk:#f3ead8;       /* 종이 바깥 배경 */
+    --ink:#29251f;        /* 글자 */
+    --muted:#7a6f60;      /* 연한 글자 */
+    --rule:#e6dcc8;       /* 줄 */
+    --margin:#d98c83;     /* 왼쪽 빨간 여백선 */
+    --tab:#eee5d5;        /* 탭 */
+    --tab-on:#f2d79a;     /* 선택된 탭 (형광펜) */
+    --mark:rgba(242,199,90,.45); /* 강조 형광펜 */
+    --photo-bg:#fbf3e2;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#2a2723; --desk:#1c1a18; --ink:#f4ebdd; --muted:#b3a794;
+      --rule:#3b3731; --margin:#875a56; --tab:#302c27; --tab-on:#6b512a;
+      --mark:rgba(200,150,60,.35); --photo-bg:#25221f;
+    }
   }
   *{box-sizing:border-box;}
   body{
-    margin:0; font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
-    background:var(--bg); color:var(--text); line-height:1.6;
-    -webkit-text-size-adjust:100%;
+    margin:0; background:var(--desk); color:var(--ink);
+    font-family:system-ui,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",sans-serif;
+    font-size:16px; line-height:28px; -webkit-text-size-adjust:100%;
   }
 
-  /* ===== 상단 제목 ===== */
-  header{
-    background:var(--main); color:#fff;
-    padding:18px 16px; position:sticky; top:0; z-index:10;
-    box-shadow:0 2px 8px rgba(0,0,0,.12);
-  }
-  header h1{ margin:0; font-size:19px; font-weight:700; }
-  header p{ margin:4px 0 0; font-size:13px; opacity:.9; }
+  /* ===== 상단 제목 (스크롤하면 위로 올라감) ===== */
+  header{ max-width:720px; margin:0 auto; padding:22px 20px 10px; }
+  header h1{ margin:0; font-size:21px; line-height:30px; font-weight:800; }
+  header p{ margin:2px 0 0; font-size:14px; color:var(--muted); }
 
-  /* ===== 측정 종류 선택 버튼 ===== */
+  /* ===== 분류 탭 (맨 위에 고정) ===== */
+  .tabs-wrap{ position:sticky; top:0; z-index:10; background:var(--desk); }
   .tabs{
-    display:flex; gap:8px; overflow-x:auto; padding:12px 16px;
-    background:var(--card); border-bottom:1px solid var(--line);
-    position:sticky; top:60px; z-index:9;
+    max-width:720px; margin:0 auto; display:flex; gap:6px;
+    overflow-x:auto; padding:10px 16px 0; scrollbar-width:none;
   }
+  .tabs::-webkit-scrollbar{ display:none; }
   .tab{
-    flex:0 0 auto; border:1.5px solid var(--line); background:#fff;
-    color:var(--muted); padding:9px 16px; border-radius:999px;
-    font-size:15px; font-weight:600; cursor:pointer; white-space:nowrap;
+    flex:0 0 auto; border:none; cursor:pointer; white-space:nowrap;
+    background:var(--tab); color:var(--muted); font:inherit; font-size:15px; font-weight:700;
+    padding:8px 16px 10px; border-radius:10px 10px 0 0;
   }
-  .tab.active{ background:var(--main); color:#fff; border-color:var(--main); }
+  .tab.active{ background:var(--tab-on); color:var(--ink); }
 
-  /* ===== 본문 ===== */
-  main{ padding:16px; max-width:720px; margin:0 auto; }
-  .section-title{
-    display:flex; align-items:center; gap:8px;
-    font-size:17px; font-weight:700; margin:22px 0 12px;
+  /* ===== 종이 ===== */
+  main{
+    max-width:720px; margin:0 auto 0; background:var(--paper);
+    border-top:3px solid var(--tab-on);
+    padding:18px 18px 32px 34px; min-height:60vh; position:relative;
+    box-shadow:0 1px 0 var(--rule), 0 8px 24px rgba(0,0,0,.06);
   }
-  .section-title .num{
-    background:var(--main); color:#fff; width:26px; height:26px;
-    border-radius:50%; display:grid; place-items:center; font-size:14px; flex:0 0 auto;
+  main::before{ /* 왼쪽 빨간 여백선 */
+    content:""; position:absolute; top:0; bottom:0; left:22px;
+    border-left:1.5px solid var(--margin); opacity:.7;
   }
+  @media (min-width:740px){ main{ border-radius:0 0 6px 6px; padding-left:44px; } main::before{ left:28px; } }
 
-  /* 카드 */
-  .card{
-    background:var(--card); border:1px solid var(--line); border-radius:14px;
-    padding:6px 4px; margin-bottom:8px;
+  /* 큰 제목: "1. 준비물" */
+  h2{
+    font-size:19px; line-height:28px; font-weight:800; margin:26px 0 4px;
+    padding-bottom:4px; border-bottom:2px solid var(--ink);
   }
+  h2:first-child{ margin-top:4px; }
 
-  /* 준비물 체크리스트 */
-  .item{
-    display:flex; align-items:flex-start; gap:12px; padding:13px 14px;
-    border-bottom:1px solid var(--line); cursor:pointer;
+  /* 줄 메모: "- 먼지 여지 8개" */
+  ul{ list-style:none; margin:0; padding:0; }
+  li{
+    position:relative; padding:6px 0 6px 16px;
+    border-bottom:1px solid var(--rule);
   }
-  .item:last-child{ border-bottom:none; }
-  .item input{ width:22px; height:22px; margin-top:2px; flex:0 0 auto; accent-color:var(--main); }
-  .item .name{ font-weight:600; display:block; }
-  .item .desc{ font-size:13.5px; color:var(--muted); margin-top:2px; }
-  .item.checked .name{ text-decoration:line-through; color:var(--muted); }
+  li::before{ content:"-"; position:absolute; left:2px; top:6px; color:var(--muted); }
+  ol{ list-style:none; margin:0; padding:0; counter-reset:n; }
+  ol li{ counter-increment:n; padding-left:26px; }
+  ol li::before{ content:counter(n) ")"; left:0; font-weight:700; color:var(--muted); }
 
-  /* 과정(순서) 목록 */
-  .step{
-    display:flex; gap:12px; padding:13px 14px; border-bottom:1px solid var(--line);
+  .sub{ display:block; font-size:14px; line-height:22px; color:var(--muted); }
+  b, .hl{ font-weight:700; background:linear-gradient(transparent 55%, var(--mark) 55%); }
+
+  /* 사진 자리 */
+  figure{ margin:8px 0 4px; }
+  figure img{
+    display:block; width:100%; max-width:420px; aspect-ratio:4/3; object-fit:cover;
+    border-radius:4px; background:var(--photo-bg);
+    box-shadow:0 1px 4px rgba(0,0,0,.15);
   }
-  .step:last-child{ border-bottom:none; }
-  .step .n{
-    flex:0 0 auto; width:24px; height:24px; border-radius:50%;
-    background:#eef3fc; color:var(--main-dark); font-weight:700;
-    display:grid; place-items:center; font-size:13px;
+  .photo-empty{
+    width:100%; max-width:420px; aspect-ratio:4/3; border:2px dashed var(--rule);
+    border-radius:6px; background:var(--photo-bg); color:var(--muted);
+    display:grid; place-items:center; text-align:center; font-size:14px; line-height:22px; padding:12px;
   }
+  figcaption{ font-size:13px; line-height:20px; color:var(--muted); margin-top:4px; }
 
-  /* 주의사항 상자 */
-  .warn{
-    background:var(--warn-bg); border:1px solid var(--warn-line);
-    border-radius:12px; padding:12px 14px; margin:10px 0; font-size:14.5px;
-  }
-  .warn b{ color:#9a6700; }
+  /* 준비물: 2열 */
+  ul.tools{ display:grid; grid-template-columns:1fr 1fr; gap:0 14px; }
+  ul.tools li{ display:flex; flex-direction:column; padding:8px 0 10px 12px; line-height:22px; }
+  ul.tools li{ padding-left:0; }
+  ul.tools li::before{ content:none; }
+  ul.tools label{ display:flex; gap:7px; align-items:flex-start; cursor:pointer; }
+  ul.tools input{ width:19px; height:19px; margin:2px 0 0; flex:0 0 auto; accent-color:var(--margin); }
+  ul.tools li.done .name{ text-decoration:line-through; color:var(--muted); }
+  .check-info{ display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--muted); margin:2px 0 0; }
+  .check-info button{ border:none; background:none; color:var(--muted); font:inherit; text-decoration:underline; cursor:pointer; padding:4px 0; }
+  ul.tools .sub{ font-size:12.5px; line-height:18px; }
+  ul.tools figure{ margin-top:auto; padding-top:6px; }
+  ul.tools figure img, ul.tools .photo-empty{ max-width:none; font-size:12.5px; line-height:18px; padding:6px; }
 
-  /* 진행률 표시 */
-  .progress-wrap{ margin:6px 0 2px; }
-  .progress-bar{ height:8px; background:#e9edf5; border-radius:99px; overflow:hidden; }
-  .progress-bar span{ display:block; height:100%; width:0; background:var(--main); transition:width .25s; }
-  .progress-text{ font-size:13px; color:var(--muted); margin-top:6px; }
+  .soon{ text-align:center; color:var(--muted); padding:60px 0; }
 
-  /* 준비 중 안내 */
-  .soon{ text-align:center; color:var(--muted); padding:48px 16px; }
-  .soon .big{ font-size:40px; }
-
-  footer{ text-align:center; color:var(--muted); font-size:12px; padding:24px 16px 40px; }
+  footer{ text-align:center; color:var(--muted); font-size:12px; padding:20px 16px 40px; }
 </style>
 </head>
 <body>
 
 <header>
   <h1>굴뚝 TMS 시료채취 핸드북</h1>
-  <p>현장 나가기 전 준비물과 순서를 한눈에</p>
+  <p>현장 나가기 전 준비물과 순서 메모</p>
 </header>
 
-<!-- 측정 종류 선택 버튼이 자동으로 채워집니다 -->
-<nav class="tabs" id="tabs"></nav>
+<div class="tabs-wrap"><nav class="tabs" id="tabs"></nav></div>
 
-<!-- 선택한 종류의 내용이 여기에 표시됩니다 -->
 <main id="content"></main>
 
 <footer>굴뚝 TMS 시료채취 핸드북 · 현장용</footer>
@@ -123,14 +134,13 @@
 <script>
 /* ============================================================
    ▼▼▼ 여기만 고치면 내용이 바뀝니다 ▼▼▼
-   측정 종류를 하나 추가하려면 { } 블록을 하나 더 복사해서 쓰면 됩니다.
-   - id   : 영어로 된 구분용 이름 (겹치지 않게)
-   - name : 버튼에 보일 이름
-   - ready: true 면 내용 표시, false 면 '준비 중'으로 표시
-   - tools : 준비물 목록 (name=이름, desc=설명)
-   - prepare : 준비 과정 순서
-   - sampling : 채취 과정 순서
-   - cautions : 주의사항
+   - name  : 탭에 보일 이름
+   - ready : true 면 내용 표시, false 면 '준비 중'
+   - tools : 준비물 (text=이름, sub=설명, photo=사진 파일 경로)
+       사진은 images 폴더에 넣고 파일 이름을 photo에 적으면 됩니다.
+       파일이 아직 없으면 점선 '사진 자리'로 보입니다.
+   - prepare / sampling : 순서 (번호가 자동으로 붙음)
+   - cautions : 주의사항  (<b>글자</b> 로 형광펜 강조)
    ============================================================ */
 const DATA = [
   {
@@ -138,26 +148,26 @@ const DATA = [
     name: "먼지",
     ready: true,
     tools: [
-      { name: "먼지 여지 8개", desc: "1~5번은 샘플용, 6~8번은 블랭크용" },
-      { name: "먼지 샘플러 KXD-502", desc: "" },
-      { name: "도관", desc: "HCl용과 비교·확인 필요" },
-      { name: "프로브", desc: "굴뚝 내경을 미리 파악한 뒤 길이 결정" },
-      { name: "프로브 거치대", desc: "" },
-      { name: "임핀저 박스", desc: "" },
-      { name: "먼지 노즐", desc: "" },
-      { name: "보루 가방", desc: "" },
-      { name: "얼음 · 아이스박스", desc: "배출가스 냉각용" }
+      { text: "먼지 여지 8개", sub: "1~5번은 샘플용, 6~8번은 블랭크용", photo: "images/dust-filter.jpg" },
+      { text: "먼지 샘플러 KXD-502", photo: "images/dust-sampler.jpg" },
+      { text: "도관", sub: "HCl용과 비교·확인 필요", photo: "images/tube.jpg" },
+      { text: "프로브", sub: "굴뚝 내경을 미리 파악한 뒤 길이 결정", photo: "images/probe.jpg" },
+      { text: "프로브 거치대", photo: "images/probe-stand.jpg" },
+      { text: "임핀저 박스", photo: "images/impinger-box.jpg" },
+      { text: "먼지 노즐", photo: "images/dust-nozzle.jpg" },
+      { text: "보루 가방", photo: "images/bag.jpg" },
+      { text: "얼음 · 아이스박스", sub: "배출가스 냉각용", photo: "images/icebox.jpg" }
     ],
     prepare: [
-      "여지를 측정 전 105℃에서 2시간 이상 건조한다.",
+      "여지를 측정 전 <b>105℃에서 2시간 이상</b> 건조한다.",
       "굴뚝 내경을 미리 파악해 프로브 길이를 결정한다.",
-      "임핀저를 구성한다 — 1·2번: 물 100g / 3번: 빈 병 / 4번: 실리카겔 200~300g",
+      "임핀저를 구성한다.<span class='sub'>1·2번: 물 100g / 3번: 빈 병 / 4번: 실리카겔 200~300g</span>",
       "도관이 HCl용과 맞는지 비교·확인한다."
     ],
     sampling: [
       "프로브를 거치대에 고정하고 노즐을 장착한다.",
       "임핀저 박스를 연결하고 샘플러(KXD-502)를 준비한다.",
-      "배출가스를 얼음으로 20℃ 이하로 냉각하며 채취한다.",
+      "배출가스를 얼음으로 <b>20℃ 이하</b>로 냉각하며 채취한다.",
       "1~5번 여지로 시료를 채취하고, 6~8번 여지는 블랭크로 둔다."
     ],
     cautions: [
@@ -167,9 +177,9 @@ const DATA = [
     ]
   },
 
-  /* 아래는 나중에 채워 넣을 예시입니다. ready를 true로 바꾸고 내용을 넣으세요. */
-  { id: "hcl",  name: "염화수소(HCl)", ready: false },
-  { id: "etc",  name: "기타",         ready: false }
+  /* 나중에 채워 넣을 자리입니다. ready를 true로 바꾸고 위와 같은 모양으로 내용을 넣으세요. */
+  { id: "hcl", name: "염화수소(HCl)", ready: false },
+  { id: "etc", name: "기타",          ready: false }
 ];
 /* ▲▲▲ 내용 수정 영역 끝 ▲▲▲ */
 
@@ -178,15 +188,7 @@ const DATA = [
 const tabsEl = document.getElementById("tabs");
 const contentEl = document.getElementById("content");
 let current = 0;
-
-// 체크 상태를 기억(같은 기기에서 다시 열어도 유지). 미리보기에선 저장이 안 될 수 있어요.
-function loadChecks(id){
-  try{ return JSON.parse(localStorage.getItem("check_"+id) || "{}"); }
-  catch(e){ return {}; }
-}
-function saveChecks(id, obj){
-  try{ localStorage.setItem("check_"+id, JSON.stringify(obj)); }catch(e){}
-}
+try{ const s = +localStorage.getItem("tms_tab"); if(DATA[s]) current = s; }catch(e){}
 
 function renderTabs(){
   tabsEl.innerHTML = "";
@@ -194,79 +196,85 @@ function renderTabs(){
     const b = document.createElement("button");
     b.className = "tab" + (i === current ? " active" : "");
     b.textContent = d.name;
-    b.onclick = () => { current = i; renderTabs(); renderContent(); window.scrollTo(0,0); };
+    b.onclick = () => {
+      current = i;
+      try{ localStorage.setItem("tms_tab", i); }catch(e){}
+      renderTabs(); renderContent(); window.scrollTo(0, 0);
+    };
     tabsEl.appendChild(b);
   });
 }
 
+function photoHTML(t){
+  if(!t.photo) return "";
+  const label = t.text + " 사진";
+  return '<figure><img src="'+t.photo+'" alt="'+label+'" loading="lazy" ' +
+         'onerror="this.outerHTML=\'<div class=&quot;photo-empty&quot;>📷<br>사진 자리</div>\'">' +
+         '</figure>';
+}
+
 function renderContent(){
   const d = DATA[current];
-  contentEl.innerHTML = "";
-
   if(!d.ready){
-    contentEl.innerHTML =
-      '<div class="soon"><div class="big">🛠️</div>' +
-      '<p><b>'+d.name+'</b> 측정 내용은 준비 중입니다.<br>곧 추가될 예정이에요.</p></div>';
+    contentEl.innerHTML = '<div class="soon">✏️<br><b>'+d.name+'</b> 메모는 아직 준비 중입니다.</div>';
     return;
   }
+  let n = 0, html = "";
 
   const checks = loadChecks(d.id);
-
-  // 1. 준비물
-  let html = '<div class="section-title"><span class="num">1</span>준비물</div>';
-  html += '<div class="progress-wrap"><div class="progress-bar"><span id="pbar"></span></div>' +
-          '<div class="progress-text" id="ptext"></div></div>';
-  html += '<div class="card" id="toolCard">';
-  d.tools.forEach((t, idx) => {
-    const on = checks[idx] ? " checked" : "";
-    html += '<label class="item'+(on?' checked':'')+'" data-i="'+idx+'">' +
-              '<input type="checkbox"'+on+'>' +
-              '<span><span class="name">'+t.name+'</span>' +
-              (t.desc ? '<span class="desc">'+t.desc+'</span>' : '') +
-            '</span></label>';
+  html += '<h2>'+(++n)+'. 준비물</h2>';
+  html += '<div class="check-info"><span id="ccount"></span><button type="button" id="creset">체크 모두 지우기</button></div>';
+  html += '<ul class="tools">';
+  d.tools.forEach((t, i) => {
+    const on = checks[i] ? ' checked' : '';
+    html += '<li class="'+(on ? 'done' : '')+'" data-i="'+i+'"><label><input type="checkbox"'+on+'>' +
+            '<span><span class="name">' + t.text + '</span>' + (t.sub ? '<span class="sub">'+t.sub+'</span>' : '') +
+            '</span></label>' + photoHTML(t) + '</li>';
   });
-  html += '</div>';
+  html += '</ul>';
 
-  // 2. 준비 과정
-  html += '<div class="section-title"><span class="num">2</span>준비 과정</div><div class="card">';
-  d.prepare.forEach((s, i) => {
-    html += '<div class="step"><span class="n">'+(i+1)+'</span><span>'+s+'</span></div>';
-  });
-  html += '</div>';
+  html += '<h2>'+(++n)+'. 준비 과정</h2><ol>';
+  d.prepare.forEach(s => { html += '<li>'+s+'</li>'; });
+  html += '</ol>';
 
-  // 3. 채취 과정
-  html += '<div class="section-title"><span class="num">3</span>시료채취 과정</div><div class="card">';
-  d.sampling.forEach((s, i) => {
-    html += '<div class="step"><span class="n">'+(i+1)+'</span><span>'+s+'</span></div>';
-  });
-  html += '</div>';
+  html += '<h2>'+(++n)+'. 시료채취 과정</h2><ol>';
+  d.sampling.forEach(s => { html += '<li>'+s+'</li>'; });
+  html += '</ol>';
 
-  // 주의사항
   if(d.cautions && d.cautions.length){
-    html += '<div class="section-title"><span class="num">!</span>주의사항</div>';
-    d.cautions.forEach(c => { html += '<div class="warn">⚠️ '+c+'</div>'; });
+    html += '<h2>'+(++n)+'. 주의사항</h2><ul>';
+    d.cautions.forEach(c => { html += '<li>⚠️ '+c+'</li>'; });
+    html += '</ul>';
   }
-
   contentEl.innerHTML = html;
 
-  // 체크박스 클릭 동작 연결
-  const total = d.tools.length;
-  function updateProgress(){
-    const done = Object.values(checks).filter(Boolean).length;
-    const pct = total ? Math.round(done/total*100) : 0;
-    document.getElementById("pbar").style.width = pct + "%";
-    document.getElementById("ptext").textContent = "준비물 " + done + " / " + total + " 챙김";
+  // 체크박스: 같은 기기에서 다시 열어도 유지
+  const items = contentEl.querySelectorAll("ul.tools li");
+  function updateCount(){
+    const done = d.tools.filter((_, i) => checks[i]).length;
+    document.getElementById("ccount").textContent = "챙김 " + done + " / " + d.tools.length;
   }
-  contentEl.querySelectorAll(".item").forEach(label => {
-    const i = label.dataset.i;
-    label.querySelector("input").addEventListener("change", (e) => {
+  items.forEach(li => {
+    const i = li.dataset.i;
+    li.querySelector("input").addEventListener("change", e => {
       checks[i] = e.target.checked;
-      label.classList.toggle("checked", e.target.checked);
-      saveChecks(d.id, checks);
-      updateProgress();
+      li.classList.toggle("done", e.target.checked);
+      saveChecks(d.id, checks); updateCount();
     });
   });
-  updateProgress();
+  document.getElementById("creset").onclick = () => {
+    if(!confirm("준비물 체크를 모두 지울까요?")) return;
+    for(const k in checks) delete checks[k];
+    saveChecks(d.id, checks); renderContent();
+  };
+  updateCount();
+}
+
+function loadChecks(id){
+  try{ return JSON.parse(localStorage.getItem("check_"+id) || "{}"); }catch(e){ return {}; }
+}
+function saveChecks(id, obj){
+  try{ localStorage.setItem("check_"+id, JSON.stringify(obj)); }catch(e){}
 }
 
 renderTabs();
