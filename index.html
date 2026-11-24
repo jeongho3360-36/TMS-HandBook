@@ -1,284 +1,767 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>굴뚝 TMS 시료채취 핸드북</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>STACK TMS</title>
+<meta name="description" content="굴뚝 TMS 현장 업무 지원 — FIELD WORK ASSISTANT">
+<meta name="theme-color" content="#142D43">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="STACK TMS">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
-  /* ===== 색 (메모장 느낌) ===== */
-  :root{
-    --paper:#fff9ec;      /* 종이 */
-    --desk:#f3ead8;       /* 종이 바깥 배경 */
-    --ink:#29251f;        /* 글자 */
-    --muted:#7a6f60;      /* 연한 글자 */
-    --rule:#e6dcc8;       /* 줄 */
-    --margin:#d98c83;     /* 왼쪽 빨간 여백선 */
-    --tab:#eee5d5;        /* 탭 */
-    --tab-on:#f2d79a;     /* 선택된 탭 (형광펜) */
-    --mark:rgba(242,199,90,.45); /* 강조 형광펜 */
-    --photo-bg:#fbf3e2;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --paper:#2a2723; --desk:#1c1a18; --ink:#f4ebdd; --muted:#b3a794;
-      --rule:#3b3731; --margin:#875a56; --tab:#302c27; --tab-on:#6b512a;
-      --mark:rgba(200,150,60,.35); --photo-bg:#25221f;
-    }
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0; background:var(--desk); color:var(--ink);
-    font-family:system-ui,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",sans-serif;
-    font-size:16px; line-height:28px; -webkit-text-size-adjust:100%;
-  }
+/* ================= 디자인 시스템 ================= */
+:root{
+  --navy:#142D43;      /* 메인 */
+  --blue:#2677BD;      /* 포인트 */
+  --blue-soft:#E6F0F9; /* 아이콘 배경 */
+  --bg:#F5F7FA;        /* 전체 배경 */
+  --card:#FFFFFF;      /* 카드 */
+  --text:#14212E;      /* 본문 글자 */
+  --muted:#66778A;     /* 보조 글자 (#78899A를 야외 가독성 위해 약간 진하게) */
+  --line:#E2E7EE;      /* 얇은 테두리 */
+  --green:#16A34A; --green-soft:#E8F6EE;
+  --red:#DC2626;   --red-soft:#FDECEC;
+  --track:#E3E9F0;     /* 진행률 바 바탕 */
+  --header:#142D43;
+  --shadow:0 1px 2px rgba(20,45,67,.05);
+  --radius:14px;
+  --gap:12px;
+  --nav-h:64px;
+}
+:root[data-theme="dark"]{
+  --navy:#0F2233; --blue:#4C9BE0; --blue-soft:#1A3047;
+  --bg:#0D1620; --card:#15212D; --text:#E9EFF5; --muted:#9AABBC; --line:#263646;
+  --green:#34C26B; --green-soft:#16301F; --red:#F26B6B; --red-soft:#3A1C1C;
+  --track:#263646; --header:#0F2233; --shadow:none;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html{ background:var(--bg); }
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  font-size:15px; line-height:1.55; -webkit-text-size-adjust:100%;
+  overflow-x:hidden;
+}
+button,input,select,textarea{ font:inherit; color:inherit; }
+a{ color:inherit; text-decoration:none; }
+svg.i{ width:22px; height:22px; flex:0 0 auto; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.wrap{ max-width:720px; margin:0 auto; padding:0 16px; }
 
-  /* ===== 상단 제목 (스크롤하면 위로 올라감) ===== */
-  header{ max-width:720px; margin:0 auto; padding:22px 20px 10px; }
-  header h1{ margin:0; font-size:21px; line-height:30px; font-weight:800; }
-  header p{ margin:2px 0 0; font-size:14px; color:var(--muted); }
+/* ================= 상단 헤더 ================= */
+.top{ background:var(--header); color:#fff; padding-top:env(safe-area-inset-top); }
+.brandbar{ display:flex; align-items:center; gap:10px; height:60px; }
+.logo{ width:38px; height:38px; border-radius:10px; background:rgba(255,255,255,.12); display:grid; place-items:center; }
+.logo svg.i{ width:21px; height:21px; }
+.brand b{ display:block; font-size:17px; font-weight:800; letter-spacing:.02em; line-height:1.15; }
+.brand small{ display:block; font-size:10.5px; font-weight:600; letter-spacing:.14em; opacity:.7; }
+.icon-btn{ margin-left:auto; width:44px; height:44px; border:none; background:none; color:inherit; display:grid; place-items:center; border-radius:10px; cursor:pointer; }
+.icon-btn:active{ background:rgba(255,255,255,.12); }
+.page-title{ display:flex; align-items:center; gap:4px; padding:4px 0 18px; }
+.page-title h1{ margin:0; font-size:22px; font-weight:800; letter-spacing:-.01em; }
+.back{ margin-left:-10px; width:44px; height:44px; display:grid; place-items:center; color:#fff; }
 
-  /* ===== 분류 탭 (맨 위에 고정) ===== */
-  .tabs-wrap{ position:sticky; top:0; z-index:10; background:var(--desk); }
-  .tabs{
-    max-width:720px; margin:0 auto; display:flex; gap:6px;
-    overflow-x:auto; padding:10px 16px 0; scrollbar-width:none;
-  }
-  .tabs::-webkit-scrollbar{ display:none; }
-  .tab{
-    flex:0 0 auto; border:none; cursor:pointer; white-space:nowrap;
-    background:var(--tab); color:var(--muted); font:inherit; font-size:15px; font-weight:700;
-    padding:8px 16px 10px; border-radius:10px 10px 0 0;
-  }
-  .tab.active{ background:var(--tab-on); color:var(--ink); }
+.search{ position:relative; margin:0 0 18px; }
+.search svg.i{ position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#7A8A99; width:20px; height:20px; }
+.search input{
+  width:100%; height:48px; border:none; border-radius:999px; background:#fff; color:#14212E;
+  padding:0 44px 0 44px; font-size:15.5px; outline:none;
+}
+.search input::placeholder{ color:#8494A3; }
+.search .clear{ position:absolute; right:2px; top:2px; width:44px; height:44px; border:none; background:none; color:#7A8A99; display:none; place-items:center; cursor:pointer; }
+.search.has .clear{ display:grid; }
 
-  /* ===== 종이 ===== */
-  main{
-    max-width:720px; margin:0 auto 0; background:var(--paper);
-    border-top:3px solid var(--tab-on);
-    padding:18px 18px 32px 34px; min-height:60vh; position:relative;
-    box-shadow:0 1px 0 var(--rule), 0 8px 24px rgba(0,0,0,.06);
-  }
-  main::before{ /* 왼쪽 빨간 여백선 */
-    content:""; position:absolute; top:0; bottom:0; left:22px;
-    border-left:1.5px solid var(--margin); opacity:.7;
-  }
-  @media (min-width:740px){ main{ border-radius:0 0 6px 6px; padding-left:44px; } main::before{ left:28px; } }
+/* ================= 본문 ================= */
+main{ padding:16px 0 calc(var(--nav-h) + 24px + env(safe-area-inset-bottom)); }
+.sec-title{ display:flex; align-items:center; justify-content:space-between; font-size:16px; font-weight:800; margin:22px 0 10px; }
+.sec-title:first-child{ margin-top:4px; }
+.sec-title a,.sec-title button{ font-size:13.5px; font-weight:600; color:var(--muted); border:none; background:none; padding:10px 0; cursor:pointer; }
 
-  /* 큰 제목: "1. 준비물" */
-  h2{
-    font-size:19px; line-height:28px; font-weight:800; margin:26px 0 4px;
-    padding-bottom:4px; border-bottom:2px solid var(--ink);
-  }
-  h2:first-child{ margin-top:4px; }
+.card{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); }
+.ico{ width:40px; height:40px; border-radius:11px; background:var(--blue-soft); color:var(--blue); display:grid; place-items:center; flex:0 0 auto; }
+.ico svg.i{ width:21px; height:21px; }
+.muted{ color:var(--muted); }
 
-  /* 줄 메모: "- 먼지 여지 8개" */
-  ul{ list-style:none; margin:0; padding:0; }
-  li{
-    position:relative; padding:6px 0 6px 16px;
-    border-bottom:1px solid var(--rule);
-  }
-  li::before{ content:"-"; position:absolute; left:2px; top:6px; color:var(--muted); }
-  ol{ list-style:none; margin:0; padding:0; counter-reset:n; }
-  ol li{ counter-increment:n; padding-left:26px; }
-  ol li::before{ content:counter(n) ")"; left:0; font-weight:700; color:var(--muted); }
+/* 준비 현황 카드 */
+.status{ display:block; padding:16px; }
+.status .row{ display:flex; align-items:center; gap:12px; }
+.status h3{ margin:0; font-size:16px; font-weight:700; }
+.status p{ margin:1px 0 0; font-size:13.5px; color:var(--muted); }
+.status .chev{ margin-left:auto; color:var(--muted); }
+.count{ font-size:14px; color:var(--muted); display:flex; justify-content:space-between; margin:14px 0 8px; }
+.count b{ color:var(--text); font-size:15px; }
+.count .ok{ color:var(--green); font-weight:700; }
+.bar{ height:8px; border-radius:99px; background:var(--track); overflow:hidden; }
+.bar span{ display:block; height:100%; background:var(--blue); border-radius:99px; transition:width .2s; }
+.bar.full span{ background:var(--green); }
 
-  .sub{ display:block; font-size:14px; line-height:22px; color:var(--muted); }
-  b, .hl{ font-weight:700; background:linear-gradient(transparent 55%, var(--mark) 55%); }
+/* 주요 업무 2열 */
+.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); }
+.menu-card{ display:block; padding:16px 14px 15px; min-height:128px; }
+.menu-card .ico{ margin-bottom:14px; }
+.menu-card b{ display:block; font-size:16px; font-weight:800; }
+.menu-card span{ display:block; font-size:13px; color:var(--muted); margin-top:2px; line-height:1.4; }
+@media (min-width:640px){ .grid4{ grid-template-columns:repeat(4,1fr); } }
 
-  /* 사진 자리 */
-  figure{ margin:8px 0 4px; }
-  figure img{
-    display:block; width:100%; max-width:420px; aspect-ratio:4/3; object-fit:cover;
-    border-radius:4px; background:var(--photo-bg);
-    box-shadow:0 1px 4px rgba(0,0,0,.15);
-  }
-  .photo-empty{
-    width:100%; max-width:420px; aspect-ratio:4/3; border:2px dashed var(--rule);
-    border-radius:6px; background:var(--photo-bg); color:var(--muted);
-    display:grid; place-items:center; text-align:center; font-size:14px; line-height:22px; padding:12px;
-  }
-  figcaption{ font-size:13px; line-height:20px; color:var(--muted); margin-top:4px; }
+/* 리스트 카드 */
+.list{ overflow:hidden; }
+.list > a,.list > .li{
+  display:flex; align-items:center; gap:12px; min-height:60px; padding:10px 14px;
+  border-bottom:1px solid var(--line);
+}
+.list > :last-child{ border-bottom:none; }
+.list .ico{ width:36px; height:36px; border-radius:10px; }
+.list .ico svg.i{ width:19px; height:19px; }
+.list .t{ flex:1; min-width:0; }
+.list .t b{ display:block; font-weight:700; font-size:15px; }
+.list .t small{ display:block; font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.list .chev{ color:#A3B0BD; }
+.list a:active,.menu-card:active,.status:active{ background:var(--blue-soft); }
+.group-label{ font-size:13px; font-weight:700; color:var(--muted); margin:18px 2px 8px; }
 
-  /* 준비물: 2열 */
-  ul.tools{ display:grid; grid-template-columns:1fr 1fr; gap:0 14px; }
-  ul.tools li{ display:flex; flex-direction:column; padding:8px 0 10px 12px; line-height:22px; }
-  ul.tools li{ padding-left:0; }
-  ul.tools li::before{ content:none; }
-  ul.tools label{ display:flex; gap:7px; align-items:flex-start; cursor:pointer; }
-  ul.tools input{ width:19px; height:19px; margin:2px 0 0; flex:0 0 auto; accent-color:var(--margin); }
-  ul.tools li.done .name{ text-decoration:line-through; color:var(--muted); }
-  .check-info{ display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--muted); margin:2px 0 0; }
-  .check-info button{ border:none; background:none; color:var(--muted); font:inherit; text-decoration:underline; cursor:pointer; padding:4px 0; }
-  ul.tools .sub{ font-size:12.5px; line-height:18px; }
-  ul.tools figure{ margin-top:auto; padding-top:6px; }
-  ul.tools figure img, ul.tools .photo-empty{ max-width:none; font-size:12.5px; line-height:18px; padding:6px; }
+/* 칩(분류 선택) */
+.chips{ display:flex; gap:8px; overflow-x:auto; margin:0 -16px 14px; padding:0 16px; scrollbar-width:none; }
+.chips::-webkit-scrollbar{ display:none; }
+.chip{ flex:0 0 auto; height:40px; padding:0 16px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--muted); font-weight:700; font-size:14.5px; cursor:pointer; }
+.chip.on{ background:var(--navy); border-color:var(--navy); color:#fff; }
+:root[data-theme="dark"] .chip.on{ background:var(--blue); border-color:var(--blue); }
 
-  .soon{ text-align:center; color:var(--muted); padding:60px 0; }
+/* 준비물 체크 */
+.prog{ padding:14px 16px; margin-bottom:var(--gap); }
+.prog .count{ margin-top:0; }
+.prog .reset{ display:inline-flex; align-items:center; gap:6px; margin-top:10px; height:36px; padding:0 12px; border-radius:10px; border:1px solid var(--line); background:var(--card); color:var(--muted); font-size:13.5px; font-weight:600; cursor:pointer; }
+.prog .reset svg.i{ width:16px; height:16px; }
+.items{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+@media (min-width:640px){ .items{ grid-template-columns:repeat(3,1fr); } }
+.item{ padding:10px; display:flex; flex-direction:column; cursor:pointer; user-select:none; }
+.item .head{ display:flex; gap:9px; align-items:flex-start; min-height:44px; }
+.box{ width:22px; height:22px; border-radius:7px; border:2px solid #B5C1CD; flex:0 0 auto; display:grid; place-items:center; margin-top:1px; background:var(--card); }
+.box svg.i{ width:15px; height:15px; stroke-width:3; color:#fff; opacity:0; }
+.item .name{ font-weight:700; font-size:14.5px; line-height:1.35; }
+.item .sub{ display:block; font-size:12.5px; color:var(--muted); line-height:1.35; margin-top:2px; }
+.item.done{ border-color:var(--green); }
+.item.done .box{ background:var(--green); border-color:var(--green); }
+.item.done .box svg.i{ opacity:1; }
+.item.done .name{ text-decoration:line-through; color:var(--muted); }
+.photo{ margin-top:auto; padding-top:8px; }
+.photo img,.photo .ph{ display:block; width:100%; aspect-ratio:4/3; border-radius:9px; object-fit:cover; background:var(--bg); }
+.photo .ph{ border:1.5px dashed var(--line); display:grid; place-items:center; align-content:center; gap:2px; color:#A3B0BD; font-size:12px; }
+.photo .ph svg.i{ width:20px; height:20px; }
 
-  footer{ text-align:center; color:var(--muted); font-size:12px; padding:20px 16px 40px; }
+/* 아코디언 */
+.acc{ margin-bottom:10px; overflow:hidden; }
+.acc summary{ list-style:none; display:flex; align-items:center; gap:10px; min-height:56px; padding:8px 14px; cursor:pointer; font-weight:700; }
+.acc summary::-webkit-details-marker{ display:none; }
+.acc summary .chev{ margin-left:auto; color:var(--muted); transition:transform .15s; }
+.acc[open] summary .chev{ transform:rotate(180deg); }
+.acc summary .ico{ width:32px; height:32px; border-radius:9px; }
+.acc summary .ico svg.i{ width:17px; height:17px; }
+.acc .pill{ font-size:11.5px; font-weight:700; color:var(--muted); background:var(--bg); border:1px solid var(--line); border-radius:99px; padding:1px 8px; }
+.acc .body{ padding:2px 16px 14px; border-top:1px solid var(--line); }
+.acc ul,.acc ol{ margin:10px 0 0; padding-left:20px; }
+.acc li{ margin:6px 0; }
+.acc ol li::marker{ font-weight:800; color:var(--blue); }
+.acc.warn summary .ico{ background:var(--red-soft); color:var(--red); }
+.empty{ margin:12px 0 0; padding:12px; border-radius:10px; background:var(--bg); color:var(--muted); font-size:13.5px; text-align:center; }
+b.k,.acc b,.item b{ color:var(--text); }
+
+/* 계산기 */
+.calc-sec{ padding:14px 16px; margin-bottom:var(--gap); }
+.calc-sec h3{ display:flex; align-items:center; gap:6px; margin:0 0 10px; font-size:13px; font-weight:800; letter-spacing:.04em; color:var(--muted); }
+.field{ display:grid; grid-template-columns:1fr 128px; align-items:center; gap:10px; min-height:52px; border-bottom:1px solid var(--line); }
+.field:last-child{ border-bottom:none; }
+.field label{ font-size:14.5px; font-weight:600; }
+.field label small{ display:block; font-size:12px; color:var(--muted); font-weight:500; }
+.inp{ position:relative; }
+.inp input,.inp select{ width:100%; height:44px; border:1px solid var(--line); border-radius:10px; background:var(--bg); padding:0 46px 0 10px; text-align:right; font-size:16px; font-weight:600; outline:none; }
+.inp select{ text-align:left; padding-right:10px; appearance:auto; }
+.inp input:focus,.inp select:focus{ border-color:var(--blue); background:var(--card); }
+.inp .u{ position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:12px; color:var(--muted); pointer-events:none; }
+.seg{ display:flex; background:var(--bg); border:1px solid var(--line); border-radius:11px; padding:3px; margin-bottom:10px; }
+.seg button{ flex:1; height:38px; border:none; background:none; border-radius:8px; font-weight:700; font-size:14px; color:var(--muted); cursor:pointer; }
+.seg button.on{ background:var(--card); color:var(--text); box-shadow:0 1px 2px rgba(0,0,0,.08); }
+.formula{ font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:14px; background:var(--bg); border-radius:10px; padding:12px; line-height:1.7; overflow-x:auto; white-space:pre; }
+.formula + p{ font-size:12.5px; color:var(--muted); margin:8px 0 0; }
+.result{ background:var(--navy); color:#fff; border-color:var(--navy); }
+.result h3{ color:rgba(255,255,255,.65); }
+.res-main{ font-size:30px; font-weight:800; letter-spacing:-.01em; line-height:1.2; word-break:break-all; }
+.res-main small{ font-size:15px; font-weight:600; opacity:.75; margin-left:4px; }
+.res-sub{ font-size:13.5px; opacity:.8; margin-top:6px; }
+.res-sub div{ display:flex; justify-content:space-between; border-top:1px solid rgba(255,255,255,.12); padding:6px 0; }
+.note{ font-size:12.5px; color:var(--muted); padding:0 4px; line-height:1.5; }
+.ra-table{ width:100%; border-collapse:collapse; font-size:14px; }
+.ra-table th{ font-size:12px; color:var(--muted); font-weight:700; text-align:center; padding:4px; }
+.ra-table td{ padding:3px; }
+.ra-table td:first-child{ width:28px; text-align:center; color:var(--muted); font-size:12.5px; }
+.ra-table input{ width:100%; height:40px; border:1px solid var(--line); border-radius:9px; background:var(--bg); text-align:right; padding:0 8px; font-size:15px; outline:none; }
+.ra-table input:focus{ border-color:var(--blue); }
+.btn-line{ display:flex; gap:8px; margin-top:10px; }
+.btn{ flex:1; height:44px; border-radius:10px; border:1px solid var(--line); background:var(--card); font-weight:700; font-size:14px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px; }
+.btn svg.i{ width:17px; height:17px; }
+
+/* 업무자료 */
+.star{ width:44px; height:44px; border:none; background:none; display:grid; place-items:center; color:#B5C1CD; cursor:pointer; margin-right:-8px; }
+.star.on{ color:#F5A524; }
+.star.on svg.i{ fill:#F5A524; }
+.link-state{ font-size:12px; }
+
+/* ================= 하단 탭 바 ================= */
+.tabbar{
+  position:fixed; left:0; right:0; bottom:0; z-index:20;
+  background:var(--card); border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.tabbar .in{ max-width:720px; margin:0 auto; display:grid; grid-template-columns:repeat(5,1fr); height:var(--nav-h); }
+.tabbar a{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; color:#94A3B2; font-size:11.5px; font-weight:600; }
+.tabbar a.on{ color:var(--blue); font-weight:800; }
+.tabbar svg.i{ width:23px; height:23px; }
+:root[data-theme="dark"] .tabbar a{ color:#6F8295; }
+:root[data-theme="dark"] .tabbar a.on{ color:var(--blue); }
+
+/* ================= 메뉴 시트 / 알림 ================= */
+.dim{ position:fixed; inset:0; background:rgba(8,16,24,.45); z-index:30; display:none; }
+.dim.show{ display:block; }
+.sheet{ position:fixed; left:0; right:0; bottom:0; z-index:31; background:var(--card); border-radius:18px 18px 0 0; padding:8px 16px calc(20px + env(safe-area-inset-bottom)); max-width:720px; margin:0 auto; transform:translateY(110%); transition:transform .2s; }
+.sheet.show{ transform:none; }
+.sheet .grab{ width:40px; height:4px; border-radius:9px; background:var(--line); margin:4px auto 10px; }
+.sheet h2{ font-size:17px; margin:4px 0 12px; }
+.sheet .row{ display:flex; align-items:center; gap:12px; min-height:56px; border-bottom:1px solid var(--line); }
+.sheet .row:last-child{ border-bottom:none; }
+.sheet .row b{ flex:1; font-weight:700; }
+.sheet .seg{ margin:0; width:190px; }
+.sheet .danger{ color:var(--red); border:none; background:none; font-weight:700; padding:0; cursor:pointer; text-align:left; width:100%; min-height:56px; display:flex; align-items:center; gap:12px; }
+.toast{ position:fixed; left:50%; bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom)); transform:translate(-50%,20px); background:#14212E; color:#fff; padding:11px 16px; border-radius:12px; font-size:14px; z-index:40; opacity:0; pointer-events:none; transition:.2s; max-width:calc(100% - 32px); }
+.toast.show{ opacity:1; transform:translate(-50%,0); }
+:root[data-theme="dark"] .toast{ background:#E9EFF5; color:#14212E; }
+
+.soon{ text-align:center; padding:40px 16px; color:var(--muted); }
+.soon .ico{ margin:0 auto 10px; width:52px; height:52px; border-radius:14px; }
+.hl{ background:rgba(38,119,189,.16); color:inherit; border-radius:3px; }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>굴뚝 TMS 시료채취 핸드북</h1>
-  <p>현장 나가기 전 준비물과 순서 메모</p>
+<header class="top">
+  <div class="wrap">
+    <div class="brandbar">
+      <div class="logo" id="logo"></div>
+      <div class="brand"><b>STACK TMS</b><small>FIELD WORK ASSISTANT</small></div>
+      <button class="icon-btn" id="menuBtn" aria-label="메뉴"></button>
+    </div>
+    <div class="page-title" id="pageTitle"></div>
+    <div id="searchSlot"></div>
+  </div>
 </header>
 
-<div class="tabs-wrap"><nav class="tabs" id="tabs"></nav></div>
+<main><div class="wrap" id="view"></div></main>
 
-<main id="content"></main>
+<nav class="tabbar" aria-label="하단 메뉴"><div class="in" id="tabbar"></div></nav>
 
-<footer>굴뚝 TMS 시료채취 핸드북 · 현장용</footer>
+<div class="dim" id="dim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-label="메뉴"></div>
+<div class="toast" id="toast"></div>
 
+<script src="data.js"></script>
 <script>
-/* ============================================================
-   ▼▼▼ 여기만 고치면 내용이 바뀝니다 ▼▼▼
-   - name  : 탭에 보일 이름
-   - ready : true 면 내용 표시, false 면 '준비 중'
-   - tools : 준비물 (text=이름, sub=설명, photo=사진 파일 경로)
-       사진은 images 폴더에 넣고 파일 이름을 photo에 적으면 됩니다.
-       파일이 아직 없으면 점선 '사진 자리'로 보입니다.
-   - prepare / sampling : 순서 (번호가 자동으로 붙음)
-   - cautions : 주의사항  (<b>글자</b> 로 형광펜 강조)
-   ============================================================ */
-const DATA = [
-  {
-    id: "dust",
-    name: "먼지",
-    ready: true,
-    tools: [
-      { text: "먼지 여지 8개", sub: "1~5번은 샘플용, 6~8번은 블랭크용", photo: "images/dust-filter.jpg" },
-      { text: "먼지 샘플러 KXD-502", photo: "images/dust-sampler.jpg" },
-      { text: "도관", sub: "HCl용과 비교·확인 필요", photo: "images/tube.jpg" },
-      { text: "프로브", sub: "굴뚝 내경을 미리 파악한 뒤 길이 결정", photo: "images/probe.jpg" },
-      { text: "프로브 거치대", photo: "images/probe-stand.jpg" },
-      { text: "임핀저 박스", photo: "images/impinger-box.jpg" },
-      { text: "먼지 노즐", photo: "images/dust-nozzle.jpg" },
-      { text: "보루 가방", photo: "images/bag.jpg" },
-      { text: "얼음 · 아이스박스", sub: "배출가스 냉각용", photo: "images/icebox.jpg" }
-    ],
-    prepare: [
-      "여지를 측정 전 <b>105℃에서 2시간 이상</b> 건조한다.",
-      "굴뚝 내경을 미리 파악해 프로브 길이를 결정한다.",
-      "임핀저를 구성한다.<span class='sub'>1·2번: 물 100g / 3번: 빈 병 / 4번: 실리카겔 200~300g</span>",
-      "도관이 HCl용과 맞는지 비교·확인한다."
-    ],
-    sampling: [
-      "프로브를 거치대에 고정하고 노즐을 장착한다.",
-      "임핀저 박스를 연결하고 샘플러(KXD-502)를 준비한다.",
-      "배출가스를 얼음으로 <b>20℃ 이하</b>로 냉각하며 채취한다.",
-      "1~5번 여지로 시료를 채취하고, 6~8번 여지는 블랭크로 둔다."
-    ],
-    cautions: [
-      "여지는 <b>상대습도 50% 이상</b>인 질량측정실에서 <b>2분 이상 노출 금지</b>.",
-      "여지 건조는 <b>105℃·2시간 이상</b> 반드시 지킬 것.",
-      "배출가스는 얼음으로 <b>20℃ 이하</b>로 냉각해 채취."
-    ]
-  },
+/* =====================================================================
+   STACK TMS — 화면 코드
+   내용 수정은 data.js 에서 합니다. 이 파일은 화면을 그리는 코드입니다.
+   ===================================================================== */
+const D = window.TMS_DATA || { prep:[], methods:[], docs:[] };
 
-  /* 나중에 채워 넣을 자리입니다. ready를 true로 바꾸고 위와 같은 모양으로 내용을 넣으세요. */
-  { id: "hcl", name: "염화수소(HCl)", ready: false },
-  { id: "etc", name: "기타",          ready: false }
+/* ---------- 아이콘 (Lucide 아이콘 모양) ---------- */
+const ICONS = {
+  factory:'<path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M17 18h1"/><path d="M12 18h1"/><path d="M7 18h1"/>',
+  menu:'<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/>',
+  search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  home:'<path d="M3 10 12 3l9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 22V12h6v10"/>',
+  package:'<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+  flask:'<path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.52 16h12.96"/>',
+  calc:'<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M16 14v4"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/>',
+  book:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2Z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7Z"/>',
+  file:'<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>',
+  right:'<path d="m9 18 6-6-6-6"/>',
+  left:'<path d="m15 18-6-6 6-6"/>',
+  down:'<path d="m6 9 6 6 6-6"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  clip:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+  reset:'<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
+  star:'<path d="M11.5 2.3a.6.6 0 0 1 1 0l2.6 5.3 5.8.9a.6.6 0 0 1 .3 1l-4.2 4.1 1 5.8a.6.6 0 0 1-.8.6L12 17.2l-5.2 2.8a.6.6 0 0 1-.8-.6l1-5.8-4.2-4.1a.6.6 0 0 1 .3-1l5.8-.9Z"/>',
+  camera:'<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z"/><circle cx="12" cy="13" r="3"/>',
+  scale:'<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
+  wrench:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/>',
+  alert:'<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  target:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  list:'<path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/>',
+  steps:'<path d="M10 12h11"/><path d="M10 18h11"/><path d="M10 6h11"/><path d="M4 10h2"/><path d="M4 6h1v4"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/>',
+  sigma:'<path d="M18 7V5a1 1 0 0 0-1-1H6.5a.5.5 0 0 0-.4.8l4.5 6a2 2 0 0 1 0 2.4l-4.5 6a.5.5 0 0 0 .4.8H17a1 1 0 0 0 1-1v-2"/>',
+  link:'<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+  moon:'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+  plus:'<path d="M5 12h14"/><path d="M12 5v14"/>',
+  minus:'<path d="M5 12h14"/>'
+};
+const ic = (n, cls="") => '<svg class="i '+cls+'" viewBox="0 0 24 24" aria-hidden="true">'+(ICONS[n]||"")+'</svg>';
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $ = id => document.getElementById(id);
+
+/* ---------- 저장 (LocalStorage, 실패해도 동작) ---------- */
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem("stk_"+k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem("stk_"+k, JSON.stringify(v)); }catch(e){} }
+};
+
+/* ---------- 화면 모드 ---------- */
+function applyTheme(){
+  const mode = store.get("theme", "light");
+  const dark = mode === "dark" || (mode === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.dataset.theme = dark ? "dark" : "light";
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0F2233" : "#142D43";
+}
+applyTheme();
+try{ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme); }catch(e){}
+
+/* ---------- 준비물 체크 집계 ---------- */
+const readyKinds = () => D.prep.filter(k => k.ready && k.items.length);
+const checksOf = id => store.get("check_"+id, {});
+function prepTotals(kinds){
+  let done = 0, total = 0;
+  kinds.forEach(k => { const c = checksOf(k.id); total += k.items.length; done += k.items.filter((_, i) => c[i]).length; });
+  return { done, total, pct: total ? Math.round(done/total*100) : 0 };
+}
+const barHTML = t => '<div class="bar'+(t.total && t.done === t.total ? ' full' : '')+'"><span style="width:'+t.pct+'%"></span></div>';
+
+/* ---------- 계산기 목록 ---------- */
+const CALCS = [
+  { id:"area",  name:"굴뚝 단면적 계산",      sub:"원형·사각 단면적" },
+  { id:"vel",   name:"배출가스 유속 계산",    sub:"피토관 동압으로 유속" },
+  { id:"flow",  name:"배출가스 유량 계산",    sub:"실측 유량 · 건조 표준상태 환산" },
+  { id:"o2",    name:"산소농도 보정",         sub:"표준산소농도 기준 보정" },
+  { id:"unit",  name:"ppm ↔ mg/Sm³ 환산",    sub:"가스 분자량 기준 단위 환산" },
+  { id:"ra",    name:"상대정확도 계산",       sub:"기준방법 대비 측정기기 상대정확도" }
 ];
-/* ▲▲▲ 내용 수정 영역 끝 ▲▲▲ */
 
+/* ---------- 라우팅 (#/주소) ---------- */
+const TABS = [
+  { id:"home",    name:"홈",      icon:"home" },
+  { id:"prep",    name:"준비물",   icon:"package" },
+  { id:"methods", name:"시험방법", icon:"flask" },
+  { id:"calc",    name:"업무계산", icon:"calc" },
+  { id:"docs",    name:"업무자료", icon:"book" }
+];
+function route(){
+  const p = (location.hash.replace(/^#\/?/, "") || "home").split("/");
+  return { tab: TABS.some(t => t.id === p[0]) ? p[0] : "home", sub: p[1] ? decodeURIComponent(p[1]) : "" };
+}
 
-/* ===== 아래는 화면을 그리는 코드입니다. 건드리지 않아도 됩니다. ===== */
-const tabsEl = document.getElementById("tabs");
-const contentEl = document.getElementById("content");
-let current = 0;
-try{ const s = +localStorage.getItem("tms_tab"); if(DATA[s]) current = s; }catch(e){}
+function setHeader(title, backTo){
+  $("pageTitle").innerHTML = (backTo ? '<a class="back" href="#/'+backTo+'" aria-label="뒤로">'+ic("left")+'</a>' : '') + '<h1>'+esc(title)+'</h1>';
+}
 
-function renderTabs(){
-  tabsEl.innerHTML = "";
-  DATA.forEach((d, i) => {
-    const b = document.createElement("button");
-    b.className = "tab" + (i === current ? " active" : "");
-    b.textContent = d.name;
-    b.onclick = () => {
-      current = i;
-      try{ localStorage.setItem("tms_tab", i); }catch(e){}
-      renderTabs(); renderContent(); window.scrollTo(0, 0);
-    };
-    tabsEl.appendChild(b);
+function render(){
+  const r = route();
+  $("tabbar").innerHTML = TABS.map(t =>
+    '<a href="#/'+t.id+'" class="'+(t.id === r.tab ? "on" : "")+'"'+(t.id === r.tab ? ' aria-current="page"' : '')+'>'+ic(t.icon)+'<span>'+t.name+'</span></a>'
+  ).join("");
+  $("searchSlot").innerHTML = "";
+  ({ home:renderHome, prep:renderPrep, methods:renderMethods, calc:renderCalc, docs:renderDocs })[r.tab](r.sub);
+}
+window.addEventListener("hashchange", () => { render(); window.scrollTo(0, 0); });
+
+/* ================= 홈 ================= */
+function renderHome(){
+  setHeader("현장 업무 가이드");
+  $("searchSlot").innerHTML =
+    '<div class="search" id="searchBox">'+ic("search")+
+    '<input id="q" type="search" placeholder="시험방법, 장비, 업무자료 검색" autocomplete="off" enterkeyhint="search">'+
+    '<button class="clear" id="qClear" aria-label="검색어 지우기">'+ic("x")+'</button></div>';
+  const q = $("q");
+  q.value = store.get("lastQ", "") ; store.set("lastQ", "");
+  q.addEventListener("input", () => homeBody(q.value));
+  $("qClear").onclick = () => { q.value = ""; homeBody(""); q.focus(); };
+  homeBody(q.value);
+}
+
+function homeBody(query){
+  $("searchBox").classList.toggle("has", !!query);
+  if(query.trim()) return renderSearch(query.trim());
+  const t = prepTotals(readyKinds());
+  const favs = D.methods.filter(m => m.favorite);
+  let h = '';
+  h += '<div class="sec-title">현장 준비 현황</div>';
+  h += '<a class="card status" href="#/prep"><div class="row"><div class="ico">'+ic("clip")+'</div>'+
+       '<div><h3>출발 전 준비물 점검</h3><p>현장 출발 전 체크리스트</p></div>'+ic("right","chev")+'</div>'+
+       '<div class="count"><span>체크리스트 <b>'+t.done+'</b> / '+t.total+' 완료</span>'+
+       (t.total && t.done === t.total ? '<span class="ok">준비 완료</span>' : '<span>'+t.pct+'%</span>')+'</div>'+
+       barHTML(t)+'</a>';
+
+  h += '<div class="sec-title">주요 업무</div><div class="grid2 grid4">';
+  [["prep","package","준비물","현장 출발 전 체크리스트"],
+   ["methods","flask","시험방법","시험별 절차 및 기준"],
+   ["calc","calc","업무계산","유속, 유량, 농도 환산"],
+   ["docs","book","업무자료","법령 및 업무 매뉴얼"]].forEach(m => {
+    h += '<a class="card menu-card" href="#/'+m[0]+'"><div class="ico">'+ic(m[1])+'</div><b>'+m[2]+'</b><span>'+m[3]+'</span></a>';
   });
+  h += '</div>';
+
+  if(favs.length){
+    h += '<div class="sec-title">자주 찾는 시험<a href="#/methods">전체보기</a></div><div class="card list">';
+    favs.forEach(m => {
+      h += '<a href="#/methods/'+encodeURIComponent(m.id)+'"><div class="ico">'+ic("file")+'</div>'+
+           '<div class="t"><b>'+esc(m.name)+'</b><small>'+esc(m.summary||"")+'</small></div>'+ic("right","chev")+'</a>';
+    });
+    h += '</div>';
+  }
+  $("view").innerHTML = h;
 }
 
-function photoHTML(t){
-  if(!t.photo) return "";
-  const label = t.text + " 사진";
-  return '<figure><img src="'+t.photo+'" alt="'+label+'" loading="lazy" ' +
-         'onerror="this.outerHTML=\'<div class=&quot;photo-empty&quot;>📷<br>사진 자리</div>\'">' +
-         '</figure>';
+/* 통합 검색 */
+function renderSearch(query){
+  const ql = query.toLowerCase();
+  const hit = s => String(s||"").replace(/<[^>]+>/g,"").toLowerCase().includes(ql);
+  const mark = s => esc(s).replace(new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g,"\\$&").replace(/[&<>"']/g, c => esc(c)), "gi"), m => '<mark class="hl">'+m+'</mark>');
+  const res = [];
+  D.methods.forEach(m => {
+    const fields = [m.name, m.summary, m.group].concat(m.purpose||[], m.equipment||[], m.checks||[], m.steps||[], m.criteria||[], m.cautions||[], m.references||[]);
+    if(fields.some(hit)) res.push({ icon:"flask", t:m.name, s:"시험방법 · "+(m.group||""), href:"#/methods/"+encodeURIComponent(m.id) });
+  });
+  D.prep.forEach(k => k.items.forEach(it => {
+    if(hit(it.text) || hit(it.sub)) res.push({ icon:"package", t:it.text, s:"준비물 · "+k.name, href:"#/prep/"+encodeURIComponent(k.id) });
+  }));
+  CALCS.forEach(c => { if(hit(c.name) || hit(c.sub)) res.push({ icon:"calc", t:c.name, s:"업무계산", href:"#/calc/"+c.id }); });
+  D.docs.forEach(cat => {
+    if(hit(cat.name)) res.push({ icon:"book", t:cat.name, s:"업무자료", href:"#/docs" });
+    (cat.items||[]).forEach(it => { if(hit(it.title)) res.push({ icon:"file", t:it.title, s:"업무자료 · "+cat.name, href:"#/docs" }); });
+  });
+  let h = '<div class="sec-title">검색 결과 <span class="muted" style="font-size:13.5px;font-weight:600">'+res.length+'건</span></div>';
+  if(!res.length){
+    h += '<div class="card soon"><div class="ico">'+ic("search")+'</div>"'+esc(query)+'"에 대한 결과가 없습니다.</div>';
+  }else{
+    h += '<div class="card list">'+res.map(r =>
+      '<a href="'+r.href+'" data-q><div class="ico">'+ic(r.icon)+'</div><div class="t"><b>'+mark(r.t)+'</b><small>'+esc(r.s)+'</small></div>'+ic("right","chev")+'</a>'
+    ).join("")+'</div>';
+  }
+  $("view").innerHTML = h;
+  $("view").querySelectorAll("a[data-q]").forEach(a => a.addEventListener("click", () => store.set("lastQ", query)));
 }
 
-function renderContent(){
-  const d = DATA[current];
-  if(!d.ready){
-    contentEl.innerHTML = '<div class="soon">✏️<br><b>'+d.name+'</b> 메모는 아직 준비 중입니다.</div>';
+/* ================= 준비물 ================= */
+function renderPrep(sub){
+  setHeader("준비물");
+  const kinds = D.prep;
+  if(!kinds.length){ $("view").innerHTML = '<div class="card soon">등록된 준비물이 없습니다.</div>'; return; }
+  let cur = kinds.find(k => k.id === sub) || kinds.find(k => k.id === store.get("prepKind")) || kinds[0];
+  store.set("prepKind", cur.id);
+
+  let h = '<div class="chips" role="tablist">'+kinds.map(k =>
+    '<button class="chip'+(k.id === cur.id ? " on" : "")+'" data-k="'+esc(k.id)+'" role="tab" aria-selected="'+(k.id === cur.id)+'">'+esc(k.name)+'</button>'
+  ).join("")+'</div>';
+
+  if(!cur.ready || !cur.items.length){
+    h += '<div class="card soon"><div class="ico">'+ic("package")+'</div><b class="k">'+esc(cur.name)+'</b> 준비물은 아직 준비 중입니다.<br><span style="font-size:13px">data.js의 prep 항목에 내용을 넣으면 표시됩니다.</span></div>';
+  }else{
+    h += '<div class="card prog" id="prog"></div><div class="items">';
+    const c = checksOf(cur.id);
+    cur.items.forEach((it, i) => {
+      h += '<div class="card item'+(c[i] ? " done" : "")+'" data-i="'+i+'" role="checkbox" tabindex="0" aria-checked="'+!!c[i]+'">'+
+             '<div class="head"><span class="box">'+ic("check")+'</span><span><span class="name">'+esc(it.text)+'</span>'+
+             (it.sub ? '<span class="sub">'+esc(it.sub)+'</span>' : '')+'</span></div>'+
+             (it.photo ? '<div class="photo"><img src="'+esc(it.photo)+'" alt="'+esc(it.text)+' 사진" loading="lazy" data-ph></div>' : '')+
+           '</div>';
+    });
+    h += '</div>';
+  }
+  $("view").innerHTML = h;
+
+  $("view").querySelectorAll(".chip").forEach(b => b.onclick = () => { location.hash = "#/prep/"+encodeURIComponent(b.dataset.k); });
+  $("view").querySelectorAll("img[data-ph]").forEach(img => img.addEventListener("error", () => {
+    img.outerHTML = '<div class="ph">'+ic("camera")+'사진 자리</div>';
+  }));
+  if(!cur.ready || !cur.items.length) return;
+
+  const checks = checksOf(cur.id);
+  const drawProg = () => {
+    const t = prepTotals([cur]);
+    $("prog").innerHTML =
+      '<div class="count"><span><b>'+esc(cur.name)+'</b> 준비물 <b>'+t.done+'</b> / '+t.total+'</span>'+
+      (t.done === t.total ? '<span class="ok">준비 완료</span>' : '<span>'+t.pct+'%</span>')+'</div>'+barHTML(t)+
+      '<button class="reset" id="resetBtn">'+ic("reset")+'체크리스트 초기화</button>';
+    $("resetBtn").onclick = () => {
+      if(!confirm(cur.name+" 준비물 체크를 모두 지울까요?")) return;
+      store.set("check_"+cur.id, {}); render(); toast("체크리스트를 초기화했습니다");
+    };
+  };
+  const toggle = el => {
+    const i = el.dataset.i, on = !checks[i];
+    if(on) checks[i] = true; else delete checks[i];
+    store.set("check_"+cur.id, checks);
+    el.classList.toggle("done", on); el.setAttribute("aria-checked", on);
+    drawProg();
+  };
+  $("view").querySelectorAll(".item").forEach(el => {
+    el.addEventListener("click", () => toggle(el));
+    el.addEventListener("keydown", e => { if(e.key === " " || e.key === "Enter"){ e.preventDefault(); toggle(el); } });
+  });
+  drawProg();
+}
+
+/* ================= 시험방법 ================= */
+const METHOD_SECTIONS = [
+  ["purpose",    "시험 목적",            "target", "ul"],
+  ["equipment",  "필요 장비 및 준비물",   "package","ul"],
+  ["checks",     "시험 전 확인사항",      "list",   "ul"],
+  ["steps",      "단계별 시험 절차",      "steps",  "ol"],
+  ["criteria",   "결과 계산 및 판정 기준", "sigma",  "ul"],
+  ["cautions",   "주의사항",             "alert",  "ul"],
+  ["references", "관련 법령 및 출처",     "scale",  "ul"]
+];
+function renderMethods(sub){
+  const m = D.methods.find(x => x.id === sub);
+  if(m) return renderMethodDetail(m);
+  setHeader("시험방법");
+  const groups = [];
+  D.methods.forEach(x => { const g = x.group || "기타"; if(!groups.includes(g)) groups.push(g); });
+  let h = '';
+  groups.forEach((g, gi) => {
+    h += '<div class="group-label"'+(gi === 0 ? ' style="margin-top:4px"' : '')+'>'+esc(g)+'</div><div class="card list">';
+    D.methods.filter(x => (x.group || "기타") === g).forEach(x => {
+      const filled = METHOD_SECTIONS.filter(s => (x[s[0]]||[]).length).length;
+      h += '<a href="#/methods/'+encodeURIComponent(x.id)+'"><div class="ico">'+ic("file")+'</div>'+
+           '<div class="t"><b>'+esc(x.name)+'</b><small>'+(filled ? esc(x.summary||"")+' · '+filled+'/'+METHOD_SECTIONS.length+' 항목' : '자료 입력 예정')+'</small></div>'+ic("right","chev")+'</a>';
+    });
+    h += '</div>';
+  });
+  $("view").innerHTML = h || '<div class="card soon">등록된 시험방법이 없습니다.</div>';
+}
+function renderMethodDetail(m){
+  setHeader(m.name, "methods");
+  let h = '<p class="note" style="margin:0 0 12px">'+esc(m.group||"")+(m.summary ? ' · '+esc(m.summary) : '')+'</p>';
+  METHOD_SECTIONS.forEach(([key, title, icon, tag], i) => {
+    const arr = m[key] || [];
+    h += '<details class="card acc'+(key === "cautions" ? " warn" : "")+'"'+(arr.length && i < 4 ? " open" : "")+'>'+
+         '<summary><span class="ico">'+ic(icon)+'</span>'+title+(arr.length ? '' : ' <span class="pill">입력 예정</span>')+ic("down","chev")+'</summary><div class="body">'+
+         (arr.length ? '<'+tag+'>'+arr.map(s => '<li>'+s+'</li>').join("")+'</'+tag+'>'
+                     : '<div class="empty">자료 입력 예정입니다.<br>실제 시험기준을 확인한 뒤 data.js에 입력하세요.</div>')+
+         '</div></details>';
+  });
+  $("view").innerHTML = h;
+}
+
+/* ================= 업무계산 ================= */
+const num = v => { const n = parseFloat(String(v).replace(/,/g, "")); return isFinite(n) ? n : NaN; };
+const fmt = (n, d=3) => isFinite(n) ? n.toLocaleString("ko-KR", { maximumFractionDigits:d }) : "—";
+function field(id, label, unit, val, hint){
+  return '<div class="field"><label for="'+id+'">'+label+(hint ? '<small>'+hint+'</small>' : '')+'</label>'+
+         '<div class="inp"><input id="'+id+'" inputmode="decimal" autocomplete="off" value="'+(val ?? "")+'"><span class="u">'+unit+'</span></div></div>';
+}
+const sec = (title, body, cls="") => '<div class="card calc-sec '+cls+'"><h3>'+title+'</h3>'+body+'</div>';
+const resultBox = (main, unit, rows=[]) =>
+  '<div class="res-main">'+main+'<small>'+unit+'</small></div>'+
+  (rows.length ? '<div class="res-sub">'+rows.map(r => '<div><span>'+r[0]+'</span><b>'+r[1]+'</b></div>').join("")+'</div>' : '');
+const NOTE = '<p class="note">※ 계산식은 업무 참고용입니다. 적용 전 대기오염공정시험기준 원문과 대조하세요.</p>';
+
+function renderCalc(sub){
+  const c = CALCS.find(x => x.id === sub);
+  if(!c){
+    setHeader("업무계산");
+    $("view").innerHTML = '<div class="card list">'+CALCS.map(x =>
+      '<a href="#/calc/'+x.id+'"><div class="ico">'+ic("calc")+'</div><div class="t"><b>'+x.name+'</b><small>'+x.sub+'</small></div>'+ic("right","chev")+'</a>'
+    ).join("")+'</div>';
     return;
   }
-  let n = 0, html = "";
+  setHeader(c.name, "calc");
+  CALC_UI[c.id]();
+}
 
-  const checks = loadChecks(d.id);
-  html += '<h2>'+(++n)+'. 준비물</h2>';
-  html += '<div class="check-info"><span id="ccount"></span><button type="button" id="creset">체크 모두 지우기</button></div>';
-  html += '<ul class="tools">';
-  d.tools.forEach((t, i) => {
-    const on = checks[i] ? ' checked' : '';
-    html += '<li class="'+(on ? 'done' : '')+'" data-i="'+i+'"><label><input type="checkbox"'+on+'>' +
-            '<span><span class="name">' + t.text + '</span>' + (t.sub ? '<span class="sub">'+t.sub+'</span>' : '') +
-            '</span></label>' + photoHTML(t) + '</li>';
-  });
-  html += '</ul>';
+/* 입력이 바뀔 때마다 다시 계산 */
+function live(ids, fn){
+  const run = () => { const v = {}; ids.forEach(id => v[id] = num($(id).value)); fn(v); };
+  ids.forEach(id => $(id).addEventListener("input", run)); run();
+}
+function segUI(id, opts, cur){
+  return '<div class="seg" id="'+id+'">'+opts.map(o => '<button data-v="'+o[0]+'" class="'+(o[0] === cur ? "on" : "")+'">'+o[1]+'</button>').join("")+'</div>';
+}
+function onSeg(id, fn){ $(id).querySelectorAll("button").forEach(b => b.onclick = () => fn(b.dataset.v)); }
 
-  html += '<h2>'+(++n)+'. 준비 과정</h2><ol>';
-  d.prepare.forEach(s => { html += '<li>'+s+'</li>'; });
-  html += '</ol>';
-
-  html += '<h2>'+(++n)+'. 시료채취 과정</h2><ol>';
-  d.sampling.forEach(s => { html += '<li>'+s+'</li>'; });
-  html += '</ol>';
-
-  if(d.cautions && d.cautions.length){
-    html += '<h2>'+(++n)+'. 주의사항</h2><ul>';
-    d.cautions.forEach(c => { html += '<li>⚠️ '+c+'</li>'; });
-    html += '</ul>';
-  }
-  contentEl.innerHTML = html;
-
-  // 체크박스: 같은 기기에서 다시 열어도 유지
-  const items = contentEl.querySelectorAll("ul.tools li");
-  function updateCount(){
-    const done = d.tools.filter((_, i) => checks[i]).length;
-    document.getElementById("ccount").textContent = "챙김 " + done + " / " + d.tools.length;
-  }
-  items.forEach(li => {
-    const i = li.dataset.i;
-    li.querySelector("input").addEventListener("change", e => {
-      checks[i] = e.target.checked;
-      li.classList.toggle("done", e.target.checked);
-      saveChecks(d.id, checks); updateCount();
+const CALC_UI = {
+  area(shape){
+    shape = shape || store.get("areaShape", "circle"); store.set("areaShape", shape);
+    const circle = shape === "circle";
+    $("view").innerHTML =
+      segUI("shape", [["circle","원형"],["rect","사각형"]], shape) +
+      sec("입력값", circle ? field("d","굴뚝 내경 (D)","m","") : field("w","가로 (W)","m","") + field("hh","세로 (H)","m","")) +
+      sec("계산식", '<div class="formula">'+(circle ? "A = π × D² ÷ 4" : "A = W × H")+'</div>') +
+      sec("계산 결과", '<div id="out"></div>', "result") + NOTE;
+    onSeg("shape", v => CALC_UI.area(v));
+    live(circle ? ["d"] : ["w","hh"], v => {
+      const A = circle ? Math.PI * v.d * v.d / 4 : v.w * v.hh;
+      $("out").innerHTML = resultBox(fmt(A, 4), "m²");
     });
+  },
+  vel(){
+    $("view").innerHTML =
+      sec("입력값", field("c","피토관 계수 (C)","","", "피토관 교정값") + field("h","동압 (h)","mmH₂O","") + field("g","배출가스 밀도 (γ)","kg/m³","", "배출가스 조건의 밀도")) +
+      sec("계산식", '<div class="formula">V = C × √( 2 × g × h ÷ γ )\ng = 9.81 m/s²</div>') +
+      sec("계산 결과", '<div id="out"></div>', "result") + NOTE;
+    live(["c","h","g"], v => {
+      const V = v.c * Math.sqrt(2 * 9.81 * v.h / v.g);
+      $("out").innerHTML = resultBox(fmt(V, 3), "m/s");
+    });
+  },
+  flow(){
+    $("view").innerHTML =
+      sec("입력값",
+        field("v","배출가스 평균유속 (V)","m/s","") + field("a","굴뚝 단면적 (A)","m²","", "단면적 계산 결과 사용") +
+        field("t","배출가스 온도 (θ)","℃","") + field("pa","대기압 (Pa)","mmHg","760") + field("ps","정압 (Ps)","mmHg","0") + field("xw","수분량 (Xw)","%","")) +
+      sec("계산식", '<div class="formula">Q  = V × A × 3600\nQs = Q × 273/(273+θ) × (Pa+Ps)/760 × (1 − Xw/100)</div><p>Q: 실측 유량(m³/h), Qs: 건조 표준상태 유량(Sm³/h)</p>') +
+      sec("계산 결과", '<div id="out"></div>', "result") + NOTE;
+    live(["v","a","t","pa","ps","xw"], v => {
+      const Q = v.v * v.a * 3600;
+      const Qs = Q * 273 / (273 + v.t) * (v.pa + v.ps) / 760 * (1 - v.xw / 100);
+      $("out").innerHTML = resultBox(fmt(Qs, 1), "Sm³/h", [["실측 유량 Q", fmt(Q, 1)+" m³/h"], ["건조 표준 유량 (분당)", fmt(Qs/60, 2)+" Sm³/min"]]);
+    });
+  },
+  o2(){
+    $("view").innerHTML =
+      sec("입력값", field("ca","실측 농도 (Ca)","단위 그대로","") + field("os","표준산소농도 (Os)","%","", "시설별 기준값 입력") + field("oa","실측 산소농도 (Oa)","%","")) +
+      sec("계산식", '<div class="formula">C = Ca × (21 − Os) ÷ (21 − Oa)</div><p>Os는 배출시설별 표준산소농도를 관련 기준에서 확인해 입력하세요.</p>') +
+      sec("계산 결과", '<div id="out"></div>', "result") + NOTE;
+    live(["ca","os","oa"], v => {
+      const C = v.oa >= 21 ? NaN : v.ca * (21 - v.os) / (21 - v.oa);
+      $("out").innerHTML = resultBox(fmt(C, 3), "보정 농도", [["보정 계수", fmt((21 - v.os) / (21 - v.oa), 4)]]);
+    });
+  },
+  unit(dir){
+    const GASES = [["SO2","SO₂ 이산화황",64.06],["NO2","NO₂ (NOx as NO₂)",46.01],["NO","NO 일산화질소",30.01],["CO","CO 일산화탄소",28.01],["HCl","HCl 염화수소",36.46],["HF","HF 불화수소",20.01],["NH3","NH₃ 암모니아",17.03],["custom","직접 입력",""]];
+    dir = dir || store.get("unitDir", "p2m"); store.set("unitDir", dir);
+    const p2m = dir === "p2m";
+    const gas = store.get("unitGas", "SO2");
+    $("view").innerHTML =
+      segUI("dir", [["p2m","ppm → mg/Sm³"],["m2p","mg/Sm³ → ppm"]], dir) +
+      sec("입력값",
+        '<div class="field"><label for="gas">대상 가스</label><div class="inp"><select id="gas">'+GASES.map(g => '<option value="'+g[0]+'"'+(g[0] === gas ? " selected" : "")+'>'+g[1]+'</option>').join("")+'</select></div></div>' +
+        field("mw","분자량 (M)","g/mol","") + field("x", p2m ? "농도" : "농도", p2m ? "ppm" : "mg/Sm³","")) +
+      sec("계산식", '<div class="formula">'+(p2m ? "mg/Sm³ = ppm × M ÷ 22.4" : "ppm = mg/Sm³ × 22.4 ÷ M")+'</div><p>22.4: 표준상태(0℃, 1기압) 기체 1몰의 부피(L)</p>') +
+      sec("계산 결과", '<div id="out"></div>', "result") + NOTE;
+    onSeg("dir", v => CALC_UI.unit(v));
+    const setM = () => { const g = GASES.find(x => x[0] === $("gas").value); store.set("unitGas", g[0]); if(g[2] !== ""){ $("mw").value = g[2]; } $("mw").readOnly = g[2] !== ""; $("mw").dispatchEvent(new Event("input")); };
+    $("gas").addEventListener("change", setM);
+    live(["mw","x"], v => {
+      const r = p2m ? v.x * v.mw / 22.4 : v.x * 22.4 / v.mw;
+      $("out").innerHTML = resultBox(fmt(r, 3), p2m ? "mg/Sm³" : "ppm");
+    });
+    setM();
+  },
+  ra(){
+    const T = {1:12.706,2:4.303,3:3.182,4:2.776,5:2.571,6:2.447,7:2.365,8:2.306,9:2.262,10:2.228,11:2.201,12:2.179,13:2.160,14:2.145,15:2.131,16:2.120,17:2.110,18:2.101,19:2.093,20:2.086};
+    let rows = store.get("raRows", null) || Array.from({length:9}, () => ["",""]);
+    const draw = () => {
+      $("view").innerHTML =
+        sec("입력값",
+          '<table class="ra-table"><thead><tr><th>#</th><th>기준방법 (RM)</th><th>측정기기 (CEM)</th></tr></thead><tbody>'+
+          rows.map((r, i) => '<tr><td>'+(i+1)+'</td><td><input inputmode="decimal" data-r="'+i+'" data-c="0" value="'+esc(r[0])+'"></td><td><input inputmode="decimal" data-r="'+i+'" data-c="1" value="'+esc(r[1])+'"></td></tr>').join("")+
+          '</tbody></table><div class="btn-line"><button class="btn" id="raAdd">'+ic("plus")+'행 추가</button><button class="btn" id="raDel">'+ic("minus")+'행 삭제</button><button class="btn" id="raClr">'+ic("reset")+'비우기</button></div>') +
+        sec("계산식", '<div class="formula">dᵢ = RMᵢ − CEMᵢ\nd̄ = Σdᵢ ÷ n\nSd = √( Σ(dᵢ − d̄)² ÷ (n − 1) )\nCC = t(0.975, n−1) × Sd ÷ √n\nRA(%) = ( |d̄| + |CC| ) ÷ RM̄ × 100</div><p>t: 양측 95% 신뢰수준 t-분포값 (자동 적용)</p>') +
+        sec("계산 결과", '<div id="out"></div>', "result") +
+        '<p class="note">※ 판정 기준(합격 한계값)은 관련 고시를 확인해 판단하세요. 이 화면은 계산만 합니다.</p>';
+      $("view").querySelectorAll(".ra-table input").forEach(inp => inp.addEventListener("input", () => {
+        rows[inp.dataset.r][inp.dataset.c] = inp.value; store.set("raRows", rows); calc();
+      }));
+      $("raAdd").onclick = () => { if(rows.length < 21){ rows.push(["",""]); store.set("raRows", rows); draw(); } };
+      $("raDel").onclick = () => { if(rows.length > 3){ rows.pop(); store.set("raRows", rows); draw(); } };
+      $("raClr").onclick = () => { if(confirm("입력값을 모두 지울까요?")){ rows = rows.map(() => ["",""]); store.set("raRows", rows); draw(); } };
+      calc();
+    };
+    const calc = () => {
+      const pairs = rows.map(r => [num(r[0]), num(r[1])]).filter(p => isFinite(p[0]) && isFinite(p[1]));
+      const n = pairs.length;
+      if(n < 2){ $("out").innerHTML = resultBox("—", "%", [["유효 데이터", n+" 쌍 (2쌍 이상 필요)"]]); return; }
+      const d = pairs.map(p => p[0] - p[1]);
+      const dm = d.reduce((a,b) => a+b, 0) / n;
+      const rm = pairs.reduce((a,p) => a+p[0], 0) / n;
+      const sd = Math.sqrt(d.reduce((a,x) => a + (x-dm)*(x-dm), 0) / (n-1));
+      const t = T[n-1];
+      const cc = t ? t * sd / Math.sqrt(n) : NaN;
+      const ra = (Math.abs(dm) + Math.abs(cc)) / rm * 100;
+      $("out").innerHTML = resultBox(fmt(ra, 2), "%", [["유효 데이터 n", n+" 쌍"],["기준방법 평균 RM̄", fmt(rm, 3)],["차이 평균 d̄", fmt(dm, 3)],["표준편차 Sd", fmt(sd, 3)],["t 값", t ? t : "범위 밖"],["신뢰계수 CC", fmt(cc, 3)]]);
+    };
+    draw();
+  }
+};
+
+/* ================= 업무자료 ================= */
+function renderDocs(sub){
+  setHeader("업무자료");
+  const favs = store.get("docFavs", {});
+  const onlyFav = sub === "fav";
+  let h = '<div class="chips"><button class="chip'+(onlyFav ? "" : " on")+'" data-f="">전체</button><button class="chip'+(onlyFav ? " on" : "")+'" data-f="fav">★ 즐겨찾기</button></div>';
+  let shown = 0;
+  D.docs.forEach(cat => {
+    const items = (cat.items || []).filter(it => !onlyFav || favs[it.id]);
+    if(onlyFav && !items.length) return;
+    h += '<div class="group-label">'+esc(cat.name)+'</div><div class="card list">';
+    if(!items.length) h += '<div class="li"><div class="ico">'+ic(cat.icon||"file")+'</div><div class="t"><small>등록된 자료가 없습니다 · data.js에 추가</small></div></div>';
+    items.forEach(it => {
+      shown++;
+      h += '<div class="li"><div class="ico">'+ic(cat.icon||"file")+'</div>'+
+           '<a class="t" href="'+(it.link ? esc(it.link) : "#")+'" '+(it.link ? 'target="_blank" rel="noopener"' : 'data-nolink')+'>'+
+           '<b>'+esc(it.title)+'</b><small class="link-state">'+(it.link ? "열기" : "링크 입력 예정")+'</small></a>'+
+           '<button class="star'+(favs[it.id] ? " on" : "")+'" data-id="'+esc(it.id)+'" aria-label="즐겨찾기" aria-pressed="'+!!favs[it.id]+'">'+ic("star")+'</button></div>';
+    });
+    h += '</div>';
   });
-  document.getElementById("creset").onclick = () => {
-    if(!confirm("준비물 체크를 모두 지울까요?")) return;
-    for(const k in checks) delete checks[k];
-    saveChecks(d.id, checks); renderContent();
+  if(onlyFav && !shown) h += '<div class="card soon"><div class="ico">'+ic("star")+'</div>즐겨찾기한 자료가 없습니다.<br><span style="font-size:13px">자료 옆 ☆를 눌러 추가하세요.</span></div>';
+  $("view").innerHTML = h;
+  $("view").querySelectorAll(".chip").forEach(b => b.onclick = () => { location.hash = "#/docs" + (b.dataset.f ? "/fav" : ""); });
+  $("view").querySelectorAll("a[data-nolink]").forEach(a => a.onclick = e => { e.preventDefault(); toast("링크가 아직 입력되지 않았습니다"); });
+  $("view").querySelectorAll(".star").forEach(b => b.onclick = () => {
+    const f = store.get("docFavs", {});
+    if(f[b.dataset.id]) delete f[b.dataset.id]; else f[b.dataset.id] = true;
+    store.set("docFavs", f);
+    if(onlyFav) renderDocs("fav");
+    else { b.classList.toggle("on"); b.setAttribute("aria-pressed", !!f[b.dataset.id]); toast(f[b.dataset.id] ? "즐겨찾기에 추가했습니다" : "즐겨찾기에서 뺐습니다"); }
+  });
+}
+
+/* ================= 메뉴 시트 ================= */
+function openSheet(){
+  const mode = store.get("theme", "light");
+  $("sheet").innerHTML =
+    '<div class="grab"></div><h2>설정</h2>'+
+    '<div class="row">'+ic("moon")+'<b>화면 모드</b>'+segUI("themeSeg", [["light","라이트"],["dark","다크"],["system","자동"]], mode)+'</div>'+
+    '<div class="row"><button class="danger" id="resetAll">'+ic("reset")+'준비물 체크 전체 초기화</button></div>'+
+    '<div class="row">'+ic("info")+'<b style="font-weight:500;font-size:13.5px" class="muted">STACK TMS · 로그인 없이 사용 · 체크 상태는 이 기기에만 저장됩니다</b></div>';
+  onSeg("themeSeg", v => { store.set("theme", v); applyTheme(); openSheet(); });
+  $("resetAll").onclick = () => {
+    if(!confirm("모든 종류의 준비물 체크를 지울까요?")) return;
+    D.prep.forEach(k => store.set("check_"+k.id, {}));
+    closeSheet(); render(); toast("모든 체크리스트를 초기화했습니다");
   };
-  updateCount();
+  $("dim").classList.add("show"); $("sheet").classList.add("show");
 }
+function closeSheet(){ $("dim").classList.remove("show"); $("sheet").classList.remove("show"); }
+$("dim").onclick = closeSheet;
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeSheet(); });
 
-function loadChecks(id){
-  try{ return JSON.parse(localStorage.getItem("check_"+id) || "{}"); }catch(e){ return {}; }
-}
-function saveChecks(id, obj){
-  try{ localStorage.setItem("check_"+id, JSON.stringify(obj)); }catch(e){}
-}
+let toastTimer;
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 1800); }
 
-renderTabs();
-renderContent();
+/* ================= 시작 ================= */
+$("logo").innerHTML = ic("factory");
+$("menuBtn").innerHTML = ic("menu");
+$("menuBtn").onclick = openSheet;
+render();
+
+/* PWA: 홈 화면에 추가 · 오프라인 사용 */
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
 </script>
 </body>
 </html>
