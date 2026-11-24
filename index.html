@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>굴뚝 TMS 시료채취 핸드북</title>
+<style>
+  /* ===== 색과 기본 설정 ===== */
+  :root{
+    --main:#1f6feb;       /* 포인트 색(파랑) */
+    --main-dark:#1a5fcc;
+    --bg:#f4f6fb;         /* 배경색 */
+    --card:#ffffff;       /* 카드 배경 */
+    --text:#1b1f27;       /* 글자색 */
+    --muted:#5b6473;      /* 연한 글자 */
+    --line:#e3e8f0;       /* 구분선 */
+    --warn-bg:#fff6e5;    /* 주의사항 배경 */
+    --warn-line:#f0b429;  /* 주의사항 테두리 */
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.6;
+    -webkit-text-size-adjust:100%;
+  }
+
+  /* ===== 상단 제목 ===== */
+  header{
+    background:var(--main); color:#fff;
+    padding:18px 16px; position:sticky; top:0; z-index:10;
+    box-shadow:0 2px 8px rgba(0,0,0,.12);
+  }
+  header h1{ margin:0; font-size:19px; font-weight:700; }
+  header p{ margin:4px 0 0; font-size:13px; opacity:.9; }
+
+  /* ===== 측정 종류 선택 버튼 ===== */
+  .tabs{
+    display:flex; gap:8px; overflow-x:auto; padding:12px 16px;
+    background:var(--card); border-bottom:1px solid var(--line);
+    position:sticky; top:60px; z-index:9;
+  }
+  .tab{
+    flex:0 0 auto; border:1.5px solid var(--line); background:#fff;
+    color:var(--muted); padding:9px 16px; border-radius:999px;
+    font-size:15px; font-weight:600; cursor:pointer; white-space:nowrap;
+  }
+  .tab.active{ background:var(--main); color:#fff; border-color:var(--main); }
+
+  /* ===== 본문 ===== */
+  main{ padding:16px; max-width:720px; margin:0 auto; }
+  .section-title{
+    display:flex; align-items:center; gap:8px;
+    font-size:17px; font-weight:700; margin:22px 0 12px;
+  }
+  .section-title .num{
+    background:var(--main); color:#fff; width:26px; height:26px;
+    border-radius:50%; display:grid; place-items:center; font-size:14px; flex:0 0 auto;
+  }
+
+  /* 카드 */
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:6px 4px; margin-bottom:8px;
+  }
+
+  /* 준비물 체크리스트 */
+  .item{
+    display:flex; align-items:flex-start; gap:12px; padding:13px 14px;
+    border-bottom:1px solid var(--line); cursor:pointer;
+  }
+  .item:last-child{ border-bottom:none; }
+  .item input{ width:22px; height:22px; margin-top:2px; flex:0 0 auto; accent-color:var(--main); }
+  .item .name{ font-weight:600; display:block; }
+  .item .desc{ font-size:13.5px; color:var(--muted); margin-top:2px; }
+  .item.checked .name{ text-decoration:line-through; color:var(--muted); }
+
+  /* 과정(순서) 목록 */
+  .step{
+    display:flex; gap:12px; padding:13px 14px; border-bottom:1px solid var(--line);
+  }
+  .step:last-child{ border-bottom:none; }
+  .step .n{
+    flex:0 0 auto; width:24px; height:24px; border-radius:50%;
+    background:#eef3fc; color:var(--main-dark); font-weight:700;
+    display:grid; place-items:center; font-size:13px;
+  }
+
+  /* 주의사항 상자 */
+  .warn{
+    background:var(--warn-bg); border:1px solid var(--warn-line);
+    border-radius:12px; padding:12px 14px; margin:10px 0; font-size:14.5px;
+  }
+  .warn b{ color:#9a6700; }
+
+  /* 진행률 표시 */
+  .progress-wrap{ margin:6px 0 2px; }
+  .progress-bar{ height:8px; background:#e9edf5; border-radius:99px; overflow:hidden; }
+  .progress-bar span{ display:block; height:100%; width:0; background:var(--main); transition:width .25s; }
+  .progress-text{ font-size:13px; color:var(--muted); margin-top:6px; }
+
+  /* 준비 중 안내 */
+  .soon{ text-align:center; color:var(--muted); padding:48px 16px; }
+  .soon .big{ font-size:40px; }
+
+  footer{ text-align:center; color:var(--muted); font-size:12px; padding:24px 16px 40px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>굴뚝 TMS 시료채취 핸드북</h1>
+  <p>현장 나가기 전 준비물과 순서를 한눈에</p>
+</header>
+
+<!-- 측정 종류 선택 버튼이 자동으로 채워집니다 -->
+<nav class="tabs" id="tabs"></nav>
+
+<!-- 선택한 종류의 내용이 여기에 표시됩니다 -->
+<main id="content"></main>
+
+<footer>굴뚝 TMS 시료채취 핸드북 · 현장용</footer>
+
+<script>
+/* ============================================================
+   ▼▼▼ 여기만 고치면 내용이 바뀝니다 ▼▼▼
+   측정 종류를 하나 추가하려면 { } 블록을 하나 더 복사해서 쓰면 됩니다.
+   - id   : 영어로 된 구분용 이름 (겹치지 않게)
+   - name : 버튼에 보일 이름
+   - ready: true 면 내용 표시, false 면 '준비 중'으로 표시
+   - tools : 준비물 목록 (name=이름, desc=설명)
+   - prepare : 준비 과정 순서
+   - sampling : 채취 과정 순서
+   - cautions : 주의사항
+   ============================================================ */
+const DATA = [
+  {
+    id: "dust",
+    name: "먼지",
+    ready: true,
+    tools: [
+      { name: "먼지 여지 8개", desc: "1~5번은 샘플용, 6~8번은 블랭크용" },
+      { name: "먼지 샘플러 KXD-502", desc: "" },
+      { name: "도관", desc: "HCl용과 비교·확인 필요" },
+      { name: "프로브", desc: "굴뚝 내경을 미리 파악한 뒤 길이 결정" },
+      { name: "프로브 거치대", desc: "" },
+      { name: "임핀저 박스", desc: "" },
+      { name: "먼지 노즐", desc: "" },
+      { name: "보루 가방", desc: "" },
+      { name: "얼음 · 아이스박스", desc: "배출가스 냉각용" }
+    ],
+    prepare: [
+      "여지를 측정 전 105℃에서 2시간 이상 건조한다.",
+      "굴뚝 내경을 미리 파악해 프로브 길이를 결정한다.",
+      "임핀저를 구성한다 — 1·2번: 물 100g / 3번: 빈 병 / 4번: 실리카겔 200~300g",
+      "도관이 HCl용과 맞는지 비교·확인한다."
+    ],
+    sampling: [
+      "프로브를 거치대에 고정하고 노즐을 장착한다.",
+      "임핀저 박스를 연결하고 샘플러(KXD-502)를 준비한다.",
+      "배출가스를 얼음으로 20℃ 이하로 냉각하며 채취한다.",
+      "1~5번 여지로 시료를 채취하고, 6~8번 여지는 블랭크로 둔다."
+    ],
+    cautions: [
+      "여지는 <b>상대습도 50% 이상</b>인 질량측정실에서 <b>2분 이상 노출 금지</b>.",
+      "여지 건조는 <b>105℃·2시간 이상</b> 반드시 지킬 것.",
+      "배출가스는 얼음으로 <b>20℃ 이하</b>로 냉각해 채취."
+    ]
+  },
+
+  /* 아래는 나중에 채워 넣을 예시입니다. ready를 true로 바꾸고 내용을 넣으세요. */
+  { id: "hcl",  name: "염화수소(HCl)", ready: false },
+  { id: "etc",  name: "기타",         ready: false }
+];
+/* ▲▲▲ 내용 수정 영역 끝 ▲▲▲ */
+
+
+/* ===== 아래는 화면을 그리는 코드입니다. 건드리지 않아도 됩니다. ===== */
+const tabsEl = document.getElementById("tabs");
+const contentEl = document.getElementById("content");
+let current = 0;
+
+// 체크 상태를 기억(같은 기기에서 다시 열어도 유지). 미리보기에선 저장이 안 될 수 있어요.
+function loadChecks(id){
+  try{ return JSON.parse(localStorage.getItem("check_"+id) || "{}"); }
+  catch(e){ return {}; }
+}
+function saveChecks(id, obj){
+  try{ localStorage.setItem("check_"+id, JSON.stringify(obj)); }catch(e){}
+}
+
+function renderTabs(){
+  tabsEl.innerHTML = "";
+  DATA.forEach((d, i) => {
+    const b = document.createElement("button");
+    b.className = "tab" + (i === current ? " active" : "");
+    b.textContent = d.name;
+    b.onclick = () => { current = i; renderTabs(); renderContent(); window.scrollTo(0,0); };
+    tabsEl.appendChild(b);
+  });
+}
+
+function renderContent(){
+  const d = DATA[current];
+  contentEl.innerHTML = "";
+
+  if(!d.ready){
+    contentEl.innerHTML =
+      '<div class="soon"><div class="big">🛠️</div>' +
+      '<p><b>'+d.name+'</b> 측정 내용은 준비 중입니다.<br>곧 추가될 예정이에요.</p></div>';
+    return;
+  }
+
+  const checks = loadChecks(d.id);
+
+  // 1. 준비물
+  let html = '<div class="section-title"><span class="num">1</span>준비물</div>';
+  html += '<div class="progress-wrap"><div class="progress-bar"><span id="pbar"></span></div>' +
+          '<div class="progress-text" id="ptext"></div></div>';
+  html += '<div class="card" id="toolCard">';
+  d.tools.forEach((t, idx) => {
+    const on = checks[idx] ? " checked" : "";
+    html += '<label class="item'+(on?' checked':'')+'" data-i="'+idx+'">' +
+              '<input type="checkbox"'+on+'>' +
+              '<span><span class="name">'+t.name+'</span>' +
+              (t.desc ? '<span class="desc">'+t.desc+'</span>' : '') +
+            '</span></label>';
+  });
+  html += '</div>';
+
+  // 2. 준비 과정
+  html += '<div class="section-title"><span class="num">2</span>준비 과정</div><div class="card">';
+  d.prepare.forEach((s, i) => {
+    html += '<div class="step"><span class="n">'+(i+1)+'</span><span>'+s+'</span></div>';
+  });
+  html += '</div>';
+
+  // 3. 채취 과정
+  html += '<div class="section-title"><span class="num">3</span>시료채취 과정</div><div class="card">';
+  d.sampling.forEach((s, i) => {
+    html += '<div class="step"><span class="n">'+(i+1)+'</span><span>'+s+'</span></div>';
+  });
+  html += '</div>';
+
+  // 주의사항
+  if(d.cautions && d.cautions.length){
+    html += '<div class="section-title"><span class="num">!</span>주의사항</div>';
+    d.cautions.forEach(c => { html += '<div class="warn">⚠️ '+c+'</div>'; });
+  }
+
+  contentEl.innerHTML = html;
+
+  // 체크박스 클릭 동작 연결
+  const total = d.tools.length;
+  function updateProgress(){
+    const done = Object.values(checks).filter(Boolean).length;
+    const pct = total ? Math.round(done/total*100) : 0;
+    document.getElementById("pbar").style.width = pct + "%";
+    document.getElementById("ptext").textContent = "준비물 " + done + " / " + total + " 챙김";
+  }
+  contentEl.querySelectorAll(".item").forEach(label => {
+    const i = label.dataset.i;
+    label.querySelector("input").addEventListener("change", (e) => {
+      checks[i] = e.target.checked;
+      label.classList.toggle("checked", e.target.checked);
+      saveChecks(d.id, checks);
+      updateProgress();
+    });
+  });
+  updateProgress();
+}
+
+renderTabs();
+renderContent();
+</script>
+</body>
+</html>
