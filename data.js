@@ -91,6 +91,31 @@ window.TMS_DATA = {
   ],
 
   /* ----------------------------------------------------------------
+     2-1) 출장 — 업무 유형 (색상 · 연결할 시험방법)
+          methods: 위 methods 의 id. 출장 상세에서 '관련 시험방법'으로 표시
+     ---------------------------------------------------------------- */
+  tripTypes: [
+    { id: "test",    name: "시험 및 검사", color: "#2677BD", methods: ["rata", "inspection", "zerospan"] },
+    { id: "support", name: "기술지원",     color: "#EA8A1A", methods: [] },
+    { id: "equip",   name: "장비점검",     color: "#16A34A", methods: ["zerospan"] },
+    { id: "etc",     name: "기타 업무",    color: "#78899A", methods: [] }
+  ],
+
+  /* ----------------------------------------------------------------
+     2-2) 출장 — 측정 항목 (준비물 · 시험방법 연결)
+          prep: 위 prep 의 id → 출장별 준비물 체크리스트로 연결
+          methods: 위 methods 의 id
+     ---------------------------------------------------------------- */
+  measureItems: [
+    { id: "dust", name: "먼지",          prep: "dust", methods: ["dust-sampling"] },
+    { id: "hcl",  name: "염화수소(HCl)", prep: "hcl",  methods: ["hcl-sampling"] },
+    { id: "sox",  name: "황산화물(SOx)",  prep: "",     methods: [] },
+    { id: "nox",  name: "질소산화물(NOx)", prep: "",    methods: [] },
+    { id: "co",   name: "일산화탄소(CO)", prep: "",     methods: [] },
+    { id: "etc",  name: "기타",          prep: "etc",  methods: [] }
+  ],
+
+  /* ----------------------------------------------------------------
      3) 업무자료
         link: 열 주소 (비워 두면 '링크 입력 예정')
      ---------------------------------------------------------------- */
